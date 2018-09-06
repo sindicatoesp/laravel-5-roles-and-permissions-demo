@@ -46,11 +46,16 @@ trait HasRoles
     /**
      * Determine if the user may perform the given permission.
      *
-     * @param  Permission $permission
+     * @param  mixed $permission
      * @return boolean
      */
-    public function hasPermission(Permission $permission)
+    public function hasPermission($permission)
     {
+		if (is_string($permission)) {
+			$permission = \App\Permission::where('name', $permission)->first();
+			if (empty($permission)) return false;
+		}
+
         return $this->hasRole($permission->roles);
     }
 }
